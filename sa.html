@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MBTI Eğilim Testi</title>
+  <style>
+    :root {
+      --bg-1: #0f172a;
+      --bg-2: #111827;
+      --card: rgba(255, 255, 255, 0.09);
+      --card-strong: rgba(255, 255, 255, 0.14);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --line: rgba(255, 255, 255, 0.18);
+      --accent: #7c3aed;
+      --accent-2: #06b6d4;
+      --good: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --shadow: 0 25px 70px rgba(0,0,0,.35);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(124, 58, 237, 0.35), transparent 32%),
+        radial-gradient(circle at 85% 20%, rgba(6, 182, 212, 0.28), transparent 30%),
+        radial-gradient(circle at 50% 90%, rgba(34, 197, 94, 0.13), transparent 30%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      overflow-x: hidden;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 42px 0;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .glass {
+      background: linear-gradient(145deg, rgba(255,255,255,.13), rgba(255,255,255,.06));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px);
+    }
+
+    .intro {
+      padding: 38px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      right: -70px;
+      top: -70px;
+      background: linear-gradient(135deg, rgba(124,58,237,.9), rgba(6,182,212,.7));
+      border-radius: 999px;
+      filter: blur(10px);
+      opacity: .35;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,.06);
+      font-size: 13px;
+      letter-spacing: .2px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 18px rgba(6,182,212,.8);
+    }
+
+    h1 {
+      font-size: clamp(34px, 6vw, 64px);
+      line-height: .96;
+      margin: 24px 0 18px;
+      letter-spacing: -2px;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      max-width: 720px;
+      margin: 0 0 26px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-weight: 750;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 16px 35px rgba(6,182,212,.18);
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.08);
+    }
+
+    .btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .side-card {
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .mini {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      min-height: 120px;
+    }
+
+    .mini strong {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .mini span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .notice {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(15,23,42,.35);
+      border: 1px solid var(--line);
+    }
+
+    .test-wrap {
+      margin-top: 28px;
+      display: none;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: start;
+      max-width: 880px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .test-wrap.active {
+      display: grid;
+    }
+
+    .panel {
+      padding: 24px;
+    }
+
+    .progress-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .bar {
+      height: 12px;
+      background: rgba(255,255,255,.09);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .28s ease;
+    }
+
+    .dims {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .dim {
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.055);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .dim-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 9px;
+      font-weight: 750;
+    }
+
+    .dim small {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .tiny-bar {
+      height: 8px;
+      background: rgba(255,255,255,.08);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .tiny-fill {
+      height: 100%;
+      width: 50%;
+      background: rgba(255,255,255,.35);
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .question-card {
+      padding: 30px;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .q-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .tag {
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .question {
+      font-size: clamp(24px, 3.3vw, 38px);
+      line-height: 1.18;
+      letter-spacing: -1px;
+      margin: 34px 0 26px;
+    }
+
+    .scale {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .choice {
+      min-height: 112px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.07);
+      color: var(--text);
+      padding: 16px 10px;
+      text-align: center;
+      transition: .18s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .choice:hover {
+      background: rgba(255,255,255,.12);
+      transform: translateY(-2px);
+    }
+
+    .choice.selected {
+      border-color: rgba(6,182,212,.8);
+      background: linear-gradient(145deg, rgba(124,58,237,.34), rgba(6,182,212,.18));
+      box-shadow: 0 14px 35px rgba(6,182,212,.14);
+    }
+
+    .choice b {
+      font-size: 22px;
+    }
+
+    .choice span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-top: auto;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(15,23,42,.28);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .results {
+      display: none;
+      margin-top: 28px;
+      padding: 30px;
+    }
+
+    .results.active {
+      display: block;
+    }
+
+    .result-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 24px;
+      margin-bottom: 24px;
+    }
+
+    .type-code {
+      font-size: clamp(54px, 11vw, 104px);
+      line-height: .9;
+      font-weight: 900;
+      letter-spacing: -4px;
+      background: linear-gradient(135deg, #fff, #93c5fd 45%, #67e8f9);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.55;
+      margin-top: 12px;
+      max-width: 760px;
+    }
+
+    .confidence {
+      width: 170px;
+      height: 170px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at center, rgba(15,23,42,.98) 0 58%, transparent 60%),
+        conic-gradient(var(--accent-2), var(--accent), rgba(255,255,255,.08));
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .confidence strong {
+      font-size: 34px;
+      display: block;
+    }
+
+    .confidence span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .trait-card {
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .trait-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 12px;
+      font-weight: 800;
+    }
+
+    .trait-title span {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .trait-scale {
+      height: 13px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .trait-scale::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      height: 100%;
+      width: 1px;
+      background: rgba(255,255,255,.45);
+    }
+
+    .trait-progress {
+      height: 100%;
+      width: 50%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+
+    .trait-desc {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-top: 12px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      margin: 28px 0 14px;
+      letter-spacing: -.4px;
+    }
+
+    .bullets {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .bullet {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .bullet strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .footer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .test-wrap,
+      .result-head,
+      .result-grid,
+      .bullets {
+        grid-template-columns: 1fr;
+      }
+
+      .question-card {
+        min-height: auto;
+      }
+
+      .scale {
+        grid-template-columns: 1fr;
+      }
+
+      .choice {
+        min-height: auto;
+        flex-direction: row;
+        justify-content: flex-start;
+        text-align: left;
+        padding: 14px 16px;
+      }
+
+      .confidence {
+        width: 140px;
+        height: 140px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(100% - 22px, 1120px);
+        padding: 22px 0;
+      }
+
+      .intro,
+      .side-card,
+      .panel,
+      .question-card,
+      .results {
+        padding: 20px;
+      }
+
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero" id="home">
+      <div class="intro glass">
+        <div class="eyebrow"><span class="dot"></span> Özgün MBTI eğilim testi</div>
+        <h1>Klişe sorular değil, davranış temelli ölçüm.</h1>
+        <p class="lead">
+          Bu test 48 özgün sorudan oluşur. Amaç seni kutuya sokmak değil; enerjini, karar verme tarzını,
+          bilgi işleme biçimini ve düzen tercihini daha okunabilir hale getirmektir.
+        </p>
+        <div class="actions">
+          <button class="btn btn-primary" id="startBtn">Teste Başla</button>
+          <button class="btn btn-secondary" id="demoResultBtn">Örnek Sonuç Gör</button>
+        </div>
+      </div>
+
+      <aside class="side-card glass">
+        <div class="mini-grid">
+          <div class="mini">
+            <strong>48</strong>
+            <span>Her boyut için dengeli sorular. Ters puanlanan ifadeler de var.</span>
+          </div>
+          <div class="mini">
+            <strong>5’li</strong>
+            <span>Kesinlikle katılmıyorum ile kesinlikle katılıyorum arası ölçek.</span>
+          </div>
+          <div class="mini">
+            <strong>4</strong>
+            <span>E/I, S/N, T/F, J/P eksenlerinde ayrı ayrı yüzdelik sonuç.</span>
+          </div>
+          <div class="mini">
+            <strong>Tek dosya</strong>
+            <span>HTML, CSS ve JS aynı dosyada. Sunucu gerektirmez.</span>
+          </div>
+        </div>
+        <div class="notice">
+          Not: MBTI bilimsel bir tanı aracı değildir. Sonucu kişisel farkındalık/eğlence amaçlı kullan.
+          Klinik, işe alım veya ciddi kararlar için tek başına kullanma.
+        </div>
+      </aside>
+    </section>
+
+    <section class="test-wrap" id="test">
+
+      <section class="question-card glass">
+        <div class="q-meta">
+          <span class="tag" id="dimensionTag">E / I</span>
+          <span id="answeredText">0 cevaplandı</span>
+        </div>
+
+        <h2 class="question" id="questionText"></h2>
+
+        <div class="scale" id="scale"></div>
+
+        <div class="hint">
+          İçgüdüsel değil, gerçek davranışına göre cevapla. “Olmak istediğim kişi” değil,
+          son 6-12 ayda çoğunlukla nasıl davrandığın daha değerli veri verir.
+        </div>
+
+        <div class="nav">
+          <button class="btn btn-secondary" id="prevBtn">Geri</button>
+          <button class="btn btn-primary" id="nextBtn">İleri</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="results glass" id="results"></section>
+  </main>
+
+  <script>
+    const questions = [
+      { dim: "EI", key: "E", text: "Yeni bir ortama girdiğinde, birkaç kişiyle konuşmaya başlamak seni genellikle yormaz." },
+      { dim: "EI", key: "I", text: "Yoğun sosyal bir günün ardından toparlanmak için yalnız zamana belirgin şekilde ihtiyaç duyarsın." },
+      { dim: "SN", key: "S", text: "Bir problemi çözerken önce somut verileri ve gerçek örnekleri görmek istersin." },
+      { dim: "SN", key: "N", text: "Bir fikrin gelecekte nereye evrilebileceğini düşünmek, mevcut ayrıntılardan daha çok ilgini çeker." },
+      { dim: "TF", key: "T", text: "Zor bir kararda, kişilerin kırılıp kırılmayacağından önce kararın mantıksal tutarlılığına bakarsın." },
+      { dim: "TF", key: "F", text: "Bir çözüm işe yarasa bile insanların duygusal maliyetini yüksek buluyorsan o çözümü sorgularsın." },
+      { dim: "JP", key: "J", text: "Planın net olmadığı işler sende gereksiz zihinsel yük oluşturur." },
+      { dim: "JP", key: "P", text: "Bir konuda kesin karar vermeden önce seçenekleri açık tutmak seni rahatlatır." },
+
+      { dim: "EI", key: "E", text: "Düşüncelerini konuşurken netleştirmek, tek başına düşünmekten daha doğal gelir." },
+      { dim: "EI", key: "I", text: "Bir toplantıda konuşmadan önce düşüncelerini içeride uzun süre tartarsın." },
+      { dim: "SN", key: "S", text: "Talimatlar soyut kaldığında, örnek veya adım adım açıklama isteme eğilimindesin." },
+      { dim: "SN", key: "N", text: "Aynı işi sürekli aynı yöntemle yapmak yerine yeni bir yaklaşım denemek istersin." },
+      { dim: "TF", key: "T", text: "Bir tartışmada niyetlerden çok argümanın sağlamlığına odaklanırsın." },
+      { dim: "TF", key: "F", text: "Bir ekipte uyum bozulduysa, teknik başarı bile sana eksik görünür." },
+      { dim: "JP", key: "J", text: "Son teslim tarihinden önce işi bitirmiş olmak sende belirgin rahatlama yaratır." },
+      { dim: "JP", key: "P", text: "Baskı yaklaşınca yaratıcı veya pratik çözümler üretme hızın artar." },
+
+      { dim: "EI", key: "E", text: "Enerjin düştüğünde, doğru insanlarla kısa bir sohbet seni tekrar canlandırabilir." },
+      { dim: "EI", key: "I", text: "Kalabalık içinde uzun süre kalınca zihnin sanki fazla sekme açılmış gibi yorulur." },
+      { dim: "SN", key: "S", text: "Bir iddianın doğruluğunu değerlendirirken ölçülebilir kanıt ararsın." },
+      { dim: "SN", key: "N", text: "İnsanların fark etmediği bağlantıları ve örüntüleri yakalamaktan hoşlanırsın." },
+      { dim: "TF", key: "T", text: "Birine yardım ederken en faydalı şeyin dürüst ve doğrudan geri bildirim olduğuna inanırsın." },
+      { dim: "TF", key: "F", text: "Birine geri bildirim verirken önce onun bunu nasıl karşılayacağını hesaba katarsın." },
+      { dim: "JP", key: "J", text: "Günün kabaca nasıl akacağını bilmek performansını artırır." },
+      { dim: "JP", key: "P", text: "Ani değişiklikler çoğu zaman seni bozmak yerine meraklandırır." },
+
+      { dim: "EI", key: "E", text: "Bir fikir seni heyecanlandırdığında bunu biriyle paylaşmadan durmak zor gelir." },
+      { dim: "EI", key: "I", text: "Önemli kararlarını çoğu zaman başkalarıyla konuşmadan önce kendi içinde şekillendirirsin." },
+      { dim: "SN", key: "S", text: "Geçmişte işe yaramış yöntemleri tamamen bırakmadan önce güçlü gerekçe beklersin." },
+      { dim: "SN", key: "N", text: "Kuralların arkasındaki sistemi anlamak, kuralın kendisinden daha çok ilgini çeker." },
+      { dim: "TF", key: "T", text: "Adil bir karar bazen soğuk görünebilir; bu seni tek başına rahatsız etmez." },
+      { dim: "TF", key: "F", text: "Bir kararı savunurken, insanların kendilerini değerli hissetmesini de önemsersin." },
+      { dim: "JP", key: "J", text: "Bir projeye başlamadan önce kapsamı, sırası ve beklentileri netleştirmek istersin." },
+      { dim: "JP", key: "P", text: "Başlamadan önce her ayrıntıyı bilmek zorunda değilsindir; iş ilerlerken yön bulabilirsin." },
+
+      { dim: "EI", key: "E", text: "Tanımadığın biriyle ortak nokta bulmaya çalışmak sana çoğu zaman doğal gelir." },
+      { dim: "EI", key: "I", text: "Sessizlik senin için rahatsız edici bir boşluk değil, düşünme alanıdır." },
+      { dim: "SN", key: "S", text: "Bir sunumda fazla teori varsa, 'bunu pratikte nasıl uygulayacağız?' diye düşünürsün." },
+      { dim: "SN", key: "N", text: "Tek bir olaydan daha geniş anlamlar ve ihtimaller çıkarmaya eğilimlisin." },
+      { dim: "TF", key: "T", text: "Bir fikri eleştirmen, o fikri ortaya atan kişiye karşı olduğun anlamına gelmez." },
+      { dim: "TF", key: "F", text: "Bir ortamda gerilim yükseldiğinde, önce tonu yumuşatmaya çalışırsın." },
+      { dim: "JP", key: "J", text: "Bitmemiş işler zihninde arka planda açık kalır ve seni rahatsız eder." },
+      { dim: "JP", key: "P", text: "Bir işi farklı yollarla deneme özgürlüğün varsa daha iyi çalışırsın." },
+
+      { dim: "EI", key: "E", text: "Bir grubun enerjisini okumak ve ona göre dahil olmak senin için nispeten kolaydır." },
+      { dim: "EI", key: "I", text: "Az ama derin ilişki kurmak, geniş bir çevreye sahip olmaktan daha anlamlı gelir." },
+      { dim: "SN", key: "S", text: "Belirsiz fikirler yerine net tanımlar, takvimler ve kaynaklar görmek istersin." },
+      { dim: "SN", key: "N", text: "Bir konunun olasılık alanı genişse, ayrıntılar eksik olsa bile ilgini çekebilir." },
+      { dim: "TF", key: "T", text: "Hataları kişiselleştirmeden analiz etmek gerektiğini düşünürsün." },
+      { dim: "TF", key: "F", text: "İnsanların motivasyonunu anlamadan verilen kararları eksik bulursun." },
+      { dim: "JP", key: "J", text: "Karar verildikten sonra sürekli yeniden açılması sende sabırsızlık yaratır." },
+      { dim: "JP", key: "P", text: "Yeni bilgi geldikçe planı değiştirmek sana verimsizlik değil uyum sağlama gibi gelir." }
+    ];
+
+    const labels = [
+      { value: -2, title: "1", label: "Kesinlikle katılmıyorum" },
+      { value: -1, title: "2", label: "Katılmıyorum" },
+      { value: 0, title: "3", label: "Kararsız / duruma bağlı" },
+      { value: 1, title: "4", label: "Katılıyorum" },
+      { value: 2, title: "5", label: "Kesinlikle katılıyorum" }
+    ];
+
+    const typeNames = {
+      ISTJ: "Düzenli Gerçekçi", ISFJ: "Sakin Koruyucu", INFJ: "Derin Yorumcu", INTJ: "Stratejik Kurucu",
+      ISTP: "Pratik Çözücü", ISFP: "Sessiz Uyumcu", INFP: "İçsel Pusulalı", INTP: "Analitik Keşifçi",
+      ESTP: "Hızlı Uygulayıcı", ESFP: "Canlı Deneyimci", ENFP: "Olasılık Üretici", ENTP: "Fikir Meydan Okuyucu",
+      ESTJ: "Net Organizatör", ESFJ: "Sosyal Düzenleyici", ENFJ: "İnsan Odaklı Yönlendirici", ENTJ: "Kararlı Sistem Kurucu"
+    };
+
+    const typeDescriptions = {
+      ISTJ: "Somut bilgi, güvenilir yöntem ve sorumluluk duygusu öne çıkar. Net beklenti ve ölçülebilir sonuçlarla iyi çalışırsın.",
+      ISFJ: "İstikrar, sadakat ve insanların ihtiyaçlarını sessizce fark etme eğilimi güçlüdür. Güvenilirlik senin için soyut vaatlerden önemlidir.",
+      INFJ: "İnsanları ve sistemleri derinden okumaya çalışırsın. Anlam, tutarlılık ve uzun vadeli etki senin için belirleyicidir.",
+      INTJ: "Karmaşık hedefleri yapılandırma ve strateji kurma eğilimin yüksektir. Verimsiz sistemler seni hızlıca rahatsız eder.",
+      ISTP: "Sorunları gözlemleyip pratik şekilde çözme eğilimin güçlüdür. Teorinin çalışıp çalışmadığını gerçek dünyada görmek istersin.",
+      ISFP: "Kişisel değerler, estetik duyarlılık ve sakin hareket etme tarzı öne çıkar. Baskıcı yapıların içinde kolay daralabilirsin.",
+      INFP: "İçsel değerler ve anlam arayışı kararlarında güçlü rol oynar. Yüzeysel başarıdan çok kişisel bütünlük önemlidir.",
+      INTP: "Kavramları analiz etme, varsayımları sökme ve sistemin nasıl çalıştığını anlama isteği baskındır.",
+      ESTP: "Hızlı aksiyon, gerçek zamanlı problem çözme ve fırsatları görme becerisi öne çıkar. Fazla teori seni yavaşlatabilir.",
+      ESFP: "İnsanlarla temas, deneyim ve anlık enerji senin için belirgindir. Ortama canlılık katma eğilimin yüksektir.",
+      ENFP: "Yeni ihtimaller, insanlar arası bağlantılar ve yaratıcı yön değiştirmeler seni besler. Tekdüzelik enerjini düşürebilir.",
+      ENTP: "Fikirleri test etmeyi, tartışmayı ve alternatif üretmeyi seversin. Zihinsel esneklik güçlü tarafındır.",
+      ESTJ: "Hedef, süreç ve sorumluluk net olduğunda güçlenirsin. Dağınık karar alma biçimleri sende sabırsızlık yaratabilir.",
+      ESFJ: "İnsanların ihtiyaçlarıyla düzen kurma becerisi birleşir. Uyum, sorumluluk ve topluluk hissi senin için önemlidir.",
+      ENFJ: "İnsanları ortak bir yöne taşıma ve duygusal iklimi okuma eğilimin güçlüdür. Etki yaratmak istersin.",
+      ENTJ: "Hedef belirleme, sistemi optimize etme ve karar alma tarafın baskındır. Belirsizliği yönetilebilir plana çevirmek istersin."
+    };
+
+    const dimensionCopy = {
+      EI: {
+        left: "I", right: "E",
+        name: "Enerji yönü",
+        descLeft: "İçe dönük eğilim: enerjiyi daha çok yalnızlık, derinlik ve seçici temas üzerinden toplama.",
+        descRight: "Dışa dönük eğilim: enerjiyi daha çok etkileşim, konuşma ve dış dünya üzerinden toplama."
+      },
+      SN: {
+        left: "S", right: "N",
+        name: "Bilgi işleme",
+        descLeft: "Duyumsama eğilimi: somut veri, pratik uygulama ve denenmiş yöntemlere ağırlık verme.",
+        descRight: "Sezgisel eğilim: örüntü, ihtimal, soyut bağlantı ve gelecek senaryolarına ağırlık verme."
+      },
+      TF: {
+        left: "F", right: "T",
+        name: "Karar verme",
+        descLeft: "Duygu/değer eğilimi: kararın insanlar, değerler ve ilişki iklimi üzerindeki etkisini önemseme.",
+        descRight: "Düşünme eğilimi: kararın mantık, tutarlılık ve objektif ölçütlerle uyumunu önemseme."
+      },
+      JP: {
+        left: "P", right: "J",
+        name: "Yaşam düzeni",
+        descLeft: "Algılama eğilimi: seçenekleri açık tutma, esneklik ve yeni bilgiyle yön değiştirme.",
+        descRight: "Yargılama eğilimi: plan, kapanış, netlik ve önceden yapılandırma ihtiyacı."
+      }
+    };
+
+    let current = 0;
+    const answers = new Array(questions.length).fill(null);
+
+    const home = document.getElementById("home");
+    const test = document.getElementById("test");
+    const results = document.getElementById("results");
+    const questionText = document.getElementById("questionText");
+    const scale = document.getElementById("scale");
+    const answeredText = document.getElementById("answeredText");
+    const dimensionTag = document.getElementById("dimensionTag");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+      home.classList.add("hidden");
+      test.classList.add("active");
+      results.classList.remove("active");
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.getElementById("demoResultBtn").addEventListener("click", () => {
+      const demo = {
+        EI: 3,
+        SN: 8,
+        TF: 4,
+        JP: 6
+      };
+      showResults(demo, true);
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if (current > 0) {
+        current--;
+        renderQuestion();
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (answers[current] === null) return;
+      if (current < questions.length - 1) {
+        current++;
+        renderQuestion();
+      } else {
+        showResults(calculateScores(), false);
+      }
+    });
+
+    function renderQuestion() {
+      const q = questions[current];
+      questionText.textContent = q.text;
+      dimensionTag.textContent = dimLabel(q.dim);
+      answeredText.textContent = `${answers.filter(a => a !== null).length} cevaplandı`;
+
+      scale.innerHTML = "";
+      labels.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "choice" + (answers[current] === item.value ? " selected" : "");
+        btn.innerHTML = `<b>${item.title}</b><span>${item.label}</span>`;
+        btn.addEventListener("click", () => {
+          answers[current] = item.value;
+          renderQuestion();
+        });
+        scale.appendChild(btn);
+      });
+
+      prevBtn.disabled = current === 0;
+      nextBtn.textContent = current === questions.length - 1 ? "Sonucu Hesapla" : "İleri";
+      nextBtn.disabled = answers[current] === null;
+
+    }
+
+    function dimLabel(dim) {
+      return {
+        EI: "Dışa / İçe dönüklük",
+        SN: "Somut / Sezgisel",
+        TF: "Mantık / Değer",
+        JP: "Plan / Esneklik"
+      }[dim];
+    }
+
+    function calculateScores() {
+      const scores = { EI: 0, SN: 0, TF: 0, JP: 0 };
+
+      questions.forEach((q, index) => {
+        const ans = answers[index];
+        if (ans === null) return;
+
+        // Pozitif yönler: E, N, T, J
+        // Negatif yönler: I, S, F, P
+        const positiveKey = { EI: "E", SN: "N", TF: "T", JP: "J" }[q.dim];
+        const direction = q.key === positiveKey ? 1 : -1;
+        scores[q.dim] += ans * direction;
+      });
+
+      return scores;
+    }
+
+
+    function scoreToPercent(score, dim) {
+      const count = questions.filter(q => q.dim === dim).length;
+      const max = count * 2;
+      return clamp(((score + max) / (max * 2)) * 100, 0, 100);
+    }
+
+    function clamp(n, min, max) {
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function typeFromScores(scores) {
+      return [
+        scores.EI >= 0 ? "E" : "I",
+        scores.SN >= 0 ? "N" : "S",
+        scores.TF >= 0 ? "T" : "F",
+        scores.JP >= 0 ? "J" : "P"
+      ].join("");
+    }
+
+    function confidenceFromScores(scores) {
+      const dims = ["EI", "SN", "TF", "JP"];
+      const avg = dims.reduce((sum, dim) => {
+        const pct = scoreToPercent(scores[dim], dim);
+        return sum + Math.abs(pct - 50) * 2;
+      }, 0) / dims.length;
+      return Math.round(avg);
+    }
+
+    function showResults(scores, isDemo) {
+      home.classList.add("hidden");
+      test.classList.remove("active");
+      results.classList.add("active");
+
+      const type = typeFromScores(scores);
+      const confidence = confidenceFromScores(scores);
+
+      results.innerHTML = `
+        <div class="result-head">
+          <div>
+            <div class="eyebrow"><span class="dot"></span>${isDemo ? "Örnek sonuç" : "Test sonucu"}</div>
+            <div class="type-code">${type}</div>
+            <h2 style="margin: 10px 0 0">${typeNames[type]}</h2>
+            <p class="subtitle">${typeDescriptions[type]}</p>
+          </div>
+          <div class="confidence">
+            <div>
+              <strong>%${confidence}</strong>
+              <span>netlik</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-grid">
+          ${renderTrait("EI", scores.EI)}
+          ${renderTrait("SN", scores.SN)}
+          ${renderTrait("TF", scores.TF)}
+          ${renderTrait("JP", scores.JP)}
+        </div>
+
+        <h3 class="section-title">Bu sonucu nasıl okumalı?</h3>
+        <div class="bullets">
+          <div class="bullet">
+            <strong>Yakın çıkan eksenler</strong>
+            Netlik düşükse o eksende iki tarafı da kullanıyor olabilirsin. Bu hata değil; bağlama göre değişen davranış demektir.
+          </div>
+          <div class="bullet">
+            <strong>Tip değil eğilim</strong>
+            Sonuç karakter hükmü değildir. Sadece verdiğin cevapların dört eksende hangi tarafa yığıldığını gösterir.
+          </div>
+          <div class="bullet">
+            <strong>Daha doğru kullanım</strong>
+            Sonucu “ben buyum” diye değil, “hangi durumlarda böyle davranıyorum?” diye okumak daha mantıklıdır.
+          </div>
+        </div>
+
+        <div class="footer-actions">
+          <button class="btn btn-primary" onclick="restartTest()">Testi Yeniden Çöz</button>
+          <button class="btn btn-secondary" onclick="copyResult('${type}', ${confidence})">Sonucu Kopyala</button>
+        </div>
+      `;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderTrait(dim, score) {
+      const pct = scoreToPercent(score, dim);
+      const copy = dimensionCopy[dim];
+      const dominant = pct >= 50 ? copy.right : copy.left;
+      const strength = Math.round(Math.abs(pct - 50) * 2);
+      const desc = pct >= 50 ? copy.descRight : copy.descLeft;
+
+      return `
+        <div class="trait-card">
+          <div class="trait-title">
+            <div>${copy.name}: ${dominant}</div>
+            <span>%${strength} netlik</span>
+          </div>
+          <div class="trait-scale">
+            <div class="trait-progress" style="width:${pct}%"></div>
+          </div>
+          <div class="trait-desc">${copy.left} ← → ${copy.right}<br>${desc}</div>
+        </div>
+      `;
+    }
+
+    function restartTest() {
+      current = 0;
+      answers.fill(null);
+      results.classList.remove("active");
+      test.classList.add("active");
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function copyResult(type, confidence) {
+      const text = `MBTI eğilim testi sonucum: ${type} (${typeNames[type]}), netlik: %${confidence}.`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Sonuç kopyalandı.");
+      }).catch(() => {
+        alert(text);
+      });
+    }
+  </script>
+</body>
+</html>
